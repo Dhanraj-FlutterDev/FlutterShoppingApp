@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shopping_app/providers/cart.dart';
+import 'package:flutter_shopping_app/providers/orders.dart';
+import 'package:flutter_shopping_app/screens/order_screen.dart';
 import 'package:flutter_shopping_app/widgets/cart_itemview.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +36,13 @@ class CartScreen extends StatelessWidget {
                       style: const TextStyle(color: Colors.white),
                     )),
                 TextButton(
-                    onPressed: () {}, child: Text('order now'.toUpperCase()))
+                    onPressed: () {
+                      Provider.of<Orders>(context, listen: false).addOrder(
+                          cart.items.values.toList(), cart.totalAmount);
+
+                      cart.clearCart();
+                    },
+                    child: Text('order now'.toUpperCase()))
               ],
             ),
           ),
@@ -50,6 +58,7 @@ class CartScreen extends StatelessWidget {
                           price: cart.items.values.toList()[index].price,
                           title: cart.items.values.toList()[index].title,
                           id: cart.items.values.toList()[index].id,
+                          productId: cart.items.keys.toList()[index],
                           quantity: cart.items.values.toList()[index].quantity,
                         );
                       }))
