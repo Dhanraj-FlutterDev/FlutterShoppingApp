@@ -23,7 +23,7 @@ class CartItemView extends StatelessWidget {
           child: FittedBox(
             child: Padding(
               padding: const EdgeInsets.all(5),
-              child: Text(price.toString()),
+              child: Text('\$$price'),
             ),
           ),
         ),

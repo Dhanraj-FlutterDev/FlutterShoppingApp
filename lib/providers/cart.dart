@@ -15,6 +15,9 @@ class CartItem {
 
 class Cart with ChangeNotifier {
   Map<String, CartItem> _items = {};
+  Map<String, CartItem> get items {
+    return {..._items};
+  }
 
   int get itemCount {
     return _items.length;
@@ -26,10 +29,6 @@ class Cart with ChangeNotifier {
       total += value.price * value.quantity;
     });
     return total;
-  }
-
-  Map<String, CartItem> get items {
-    return {...items};
   }
 
   void addItem(String productId, double price, String title) {
