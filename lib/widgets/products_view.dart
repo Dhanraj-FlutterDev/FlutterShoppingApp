@@ -34,7 +34,7 @@ class ProductsView extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushNamed(
                     EditOrAddProductScreen.EditAddScreenRouteName,
-                    arguments: true,
+                    arguments: EditAddArguments(isEdit: true, productId: id),
                   );
                 },
                 icon: const Icon(Icons.edit)),

@@ -3,6 +3,12 @@ import 'package:flutter_shopping_app/providers/product.dart';
 import 'package:flutter_shopping_app/providers/product_provider.dart';
 import 'package:provider/provider.dart';
 
+class EditAddArguments {
+  EditAddArguments({required this.isEdit, required this.productId});
+  final bool isEdit;
+  final String productId;
+}
+
 class EditOrAddProductScreen extends StatefulWidget {
   const EditOrAddProductScreen({
     Key? key,
@@ -23,6 +29,9 @@ class _EditOrAddProductScreenState extends State<EditOrAddProductScreen> {
   FocusNode pricefn = FocusNode();
   FocusNode desfn = FocusNode();
   FocusNode imagefn = FocusNode();
+
+  late String updateProductId;
+  late bool isFav;
 
   setImage() {
     setState(() {
@@ -45,13 +54,40 @@ class _EditOrAddProductScreenState extends State<EditOrAddProductScreen> {
     Navigator.of(context).pop();
   }
 
+  void _updateProduct() {
+    newProduct = Product(
+      id: updateProductId,
+      title: titleController.text,
+      description: descriptionController.text,
+      price: double.parse(priceController.text),
+      imageUrl: imageController.text,
+      isFavourite: isFav,
+    );
+    Provider.of<ProductProvider>(context, listen: false)
+        .updateProduct(updateProductId, newProduct);
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool isEdit = ModalRoute.of(context)!.settings.arguments as bool;
+    final arguments =
+        ModalRoute.of(context)!.settings.arguments as EditAddArguments;
+    if (arguments.productId.isNotEmpty) {
+      newProduct = Provider.of<ProductProvider>(context, listen: false)
+          .findById(arguments.productId);
+      updateProductId = arguments.productId;
+      titleController.text = newProduct.title;
+      descriptionController.text = newProduct.description;
+      priceController.text = newProduct.price.toString();
+      imageController.text = newProduct.imageUrl;
+      isFav = newProduct.isFavourite;
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: isEdit ? const Text('Edit Product') : const Text('Add Product'),
+        title: arguments.isEdit
+            ? const Text('Edit Product')
+            : const Text('Add Product'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
@@ -139,7 +175,7 @@ class _EditOrAddProductScreenState extends State<EditOrAddProductScreen> {
             ),
             ElevatedButton(
                 onPressed: () {
-                  if (!isEdit) {
+                  if (!arguments.isEdit) {
                     _addProduct();
                     ScaffoldMessenger.of(context)
                         .showSnackBar(const SnackBar(content: Text('added')));
@@ -148,9 +184,9 @@ class _EditOrAddProductScreenState extends State<EditOrAddProductScreen> {
                     descriptionController.clear();
                     imageController.clear();
                   }
-                  print('edit pressed');
+                  _updateProduct();
                 },
-                child: isEdit
+                child: arguments.isEdit
                     ? const Text('Edit Product')
                     : const Text('Add Product'))
           ],

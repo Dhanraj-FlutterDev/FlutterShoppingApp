@@ -23,7 +23,7 @@ class UserProductsScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pushNamed(
                     EditOrAddProductScreen.EditAddScreenRouteName,
-                    arguments: false);
+                    arguments: EditAddArguments(isEdit: false, productId: ''));
               },
               child: const Text(
                 'Add New',
