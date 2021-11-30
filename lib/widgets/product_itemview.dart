@@ -53,8 +53,21 @@ class ProductItemView extends StatelessWidget {
               color: Theme.of(context).primaryColorLight,
               onPressed: () {
                 cart.addItem(product.id, product.price, product.title);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text(
+                      'Item Added',
+                    ),
+                    action: SnackBarAction(
+                        label: 'UNDO',
+                        onPressed: () {
+                          cart.removeSingleItem(product.id);
+                        }),
+                  ),
+                );
               },
-              icon: Icon(Icons.shopping_cart)),
+              icon: const Icon(Icons.shopping_cart)),
         ),
       ),
     );
